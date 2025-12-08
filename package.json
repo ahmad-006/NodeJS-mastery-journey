@@ -1,0 +1,16 @@
+{
+  "name": "node-mastery-journey",
+  "version": "1.0.0",
+  "description": "My journey through the NodeJS Complete Guide",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "bun app.js",
+    "dev": "bun --watch app.js"
+  },
+  "author": "Ahmad Aamir",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
