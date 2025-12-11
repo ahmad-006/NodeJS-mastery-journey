@@ -1,6 +1,6 @@
 //Importing http module
 import http from "http";
-
+import fs, { writeFileSync } from "fs";
 //*  Creating a server with http.createServer which takes callbck finction and parameters of request and response to access some detailed insights of request received and response sent
 
 const server = http.createServer((req, res) => {
@@ -22,14 +22,31 @@ const server = http.createServer((req, res) => {
   const route = req.url;
   const method = req.method;
 
-  //?  sending response for specific route only
+  //?  sending response for specific routes only
   if (route === "/") {
     res.write(
-      `<html><head><title>My Server</title></head><body><h1>Welcome to Home page at route: ${"/"}</h1></body></html>`
+      `<html><head><title>My Server</title></head><body><form action="/message" method="POST" ><input type="text" name="message" placeholder = "Enter Your Message.."><button type="submit">Send</button></form></body></html>`
     );
-
-    //?  ending the response
     return res.end();
+  }
+
+  if (route === "/message" && method === "POST") {
+    //? creating an array to store all the chunks from streaming
+    const body = [];
+    //? event listener to get access to stream chunks
+    req.on("data", (chunk) => {
+      body.push(chunk);
+    });
+
+    //?  Buffering the streams to combine all the chunks and access the received data......
+    req.on("end", () => {
+      const parsedMessage = Buffer.concat(body).toString();
+      const message = parsedMessage.split("=")[1];
+      fs.writeFileSync("message.txt", message);
+      res.statusCode = 302;
+      res.setHeader("Location", "/");
+      return res.end();
+    });
   }
 });
 
