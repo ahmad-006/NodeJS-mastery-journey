@@ -41,12 +41,11 @@ function requestHandler(req, res) {
       const message = parsedMessage.split("=")[1];
       fs.writeFileSync("message.txt", message);
       res.statusCode = 302;
-      res.setHeader("Location", "/");
+      res.write(
+        "<html><head><title>My Server</title></head><body><h1>Welcome to My Server </h1></body></html>"
+      );
       return res.end();
     });
-    res.write(
-      "<html><head><title>My Server</title></head><body><h1>Welcome to My Server </h1></body></html>"
-    );
   }
 }
 
