@@ -6,12 +6,18 @@ import express from "express";
 
 const app = express();
 
-//?adding a middleware
+//? Adding a middleware
 app.use((req, res, next) => {
   console.log("Hello from the middleware...!");
 
-  //? next() allows program to move to next middleware
+  //? next() allows request to move to next middleware
   next();
+});
+
+//? Adding another middleware
+app.use((req, res, next) => {
+  console.log("Hello from second middleware");
+  res.send("<h1>Hello from the ExpressJS......</h1>");
 });
 
 // 'app' is just a function with the signature (req, res, next).

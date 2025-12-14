@@ -5,14 +5,11 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "cd 03-basics && bun --watch app.js"
+    "start": "cd 05-express && bun --watch app.js"
   },
   "author": "Ahmad Aamir",
   "license": "ISC",
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "dependencies": {
-    "express": "^5.2.1"
   }
 }
