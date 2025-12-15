@@ -6,6 +6,8 @@ import express from "express";
 
 const app = express();
 
+app.use(express.urlencoded({ extended: false }));
+
 //? Adding a middleware
 app.use((req, res, next) => {
   console.log("Hello from the middleware...!");
