@@ -16,6 +16,11 @@ app.use(express.urlencoded({ extended: false }));
 //? middlewares for routes
 app.use(adminRoutes);
 app.use(shopRoutes);
+app.use((req, res, next) => {
+  res
+    .status(404)
+    .send("<h1>Page not found <a href='/'>Go to Home page</a></h1>");
+});
 
 // //? Adding a middleware
 // app.use((req, res, next) => {
