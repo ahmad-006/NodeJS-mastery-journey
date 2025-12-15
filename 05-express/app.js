@@ -1,5 +1,6 @@
 //importing nodejs core modules
 import http from "http";
+import path from "path";
 
 // Importing express
 import express from "express";
@@ -14,12 +15,10 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 
 //? middlewares for routes
-app.use(adminRoutes);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use((req, res, next) => {
-  res
-    .status(404)
-    .send("<h1>Page not found <a href='/'>Go to Home page</a></h1>");
+  res.status(404).sendFile(path.join(__dirname, "views", "pageNotFound.html"));
 });
 
 // //? Adding a middleware
