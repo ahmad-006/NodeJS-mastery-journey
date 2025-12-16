@@ -11,5 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bun": "latest"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express-handlebars": "^8.0.4",
+    "pug": "^3.0.3"
   }
 }
