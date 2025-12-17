@@ -19,6 +19,11 @@ app.set("views", path.join(__dirname, "views"));
 //? middleware to parse the body from the request received
 app.use(express.urlencoded({ extended: false }));
 
+// EXPLAINS: By default, Express treats every URL as a route and hides your file system.
+// This middleware acts as a "tunnel" to the 'public' folder.
+// If a request matches a file inside 'public' (like /css/main.css), it serves it immediately.
+app.use(express.static(path.join(__dirname, "public")));
+
 //? middlewares for routes
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
