@@ -69,3 +69,9 @@ main {
   background-color: #00695c;
   color: white;
 }
+
+h1 {
+  text-align: center;
+  color: #00695c;
+  margin-top: 2rem;
+}
