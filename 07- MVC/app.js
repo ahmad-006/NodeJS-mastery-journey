@@ -11,15 +11,31 @@ import shopRoutes from "./routes/shop.js";
 
 const app = express();
 
-//? middleware to parse the body from the request received
+//? {for pug}
+// // 1. Activating the engine so that it knows we are using pug for templatings
+// app.set("view engine", "pug");
+// // 2. Defining views location where it can find the .pug files
+// app.set("views", path.join(__dirname, "views"));
 
+//? {for EJS}
+// 1. Activating the engine so that it knows we are using ejs for templatings
+app.set("view engine", "ejs");
+// 2. Defining views location where it can find the .ejs files
+app.set("views", path.join(__dirname, "views"));
+
+//? middleware to parse the body from the request received
 app.use(express.urlencoded({ extended: false }));
+
+// EXPLAINS: By default, Express treats every URL as a route and hides your file system.
+// This middleware acts as a "tunnel" to the 'public' folder.
+// If a request matches a file inside 'public' (like /css/main.css), it serves it immediately.
+app.use(express.static(path.join(__dirname, "public")));
 
 //? middlewares for routes
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "pageNotFound.html"));
+  res.status(404).render("404", { pageTitle: "Page Not Found" });
 });
 
 // //? Adding a middleware

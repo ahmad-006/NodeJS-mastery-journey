@@ -1,8 +1,5 @@
-import path from "path";
-
 import express from "express";
-import { postAddProduct } from "07- MVC/controllers/products.js";
-import { getAddProducts } from "07- MVC/controllers/products.js";
+import { getAddProducts, postAddProduct } from "../controllers/products.js";
 const router = express.Router();
 
 const products = [];
