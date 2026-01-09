@@ -10,4 +10,4 @@ router.get("/add-product", getAddProducts);
 // Using app.post so that it only receives post requests
 router.post("/product", postAddProduct);
 
-export { router, products };
+export { router };

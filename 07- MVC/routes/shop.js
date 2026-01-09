@@ -1,13 +1,9 @@
-import path from "path";
-
 import express from "express";
-import { products } from "./admin.js";
+import { getProducts } from "../../07- MVC/controllers/products.js";
 
 const router = express.Router();
 
 //? /  (default) route
-router.get("/", (req, res, next) => {
-  res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
-});
+router.get("/", getProducts);
 
 export default router;
