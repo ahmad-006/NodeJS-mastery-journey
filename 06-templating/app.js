@@ -11,9 +11,16 @@ import shopRoutes from "./routes/shop.js";
 
 const app = express();
 
-// 1. Activating the engine so that it knows we are using pug for templatings
-app.set("view engine", "pug");
-// 2. Defining views location where it can find the .pug files
+//? {for pug}
+// // 1. Activating the engine so that it knows we are using pug for templatings
+// app.set("view engine", "pug");
+// // 2. Defining views location where it can find the .pug files
+// app.set("views", path.join(__dirname, "views"));
+
+//? {for EJS}
+// 1. Activating the engine so that it knows we are using ejs for templatings
+app.set("view engine", "ejs");
+// 2. Defining views location where it can find the .ejs files
 app.set("views", path.join(__dirname, "views"));
 
 //? middleware to parse the body from the request received
