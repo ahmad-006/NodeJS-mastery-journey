@@ -1,8 +1,5 @@
-import path from "path";
-
 import express from "express";
-import { postAddProduct } from "07- MVC/controllers/products.js";
-import { getAddProducts } from "07- MVC/controllers/products.js";
+import { getAddProducts, postAddProduct } from "../controllers/products.js";
 const router = express.Router();
 
 const products = [];
@@ -13,4 +10,4 @@ router.get("/add-product", getAddProducts);
 // Using app.post so that it only receives post requests
 router.post("/product", postAddProduct);
 
-export { router, products };
+export { router };
