@@ -7,7 +7,7 @@ const router = express.Router();
 
 //? /  (default) route
 router.get("/", (req, res, next) => {
-  res.render("shop", { prods: products, docTitle: "Shop" });
+  res.render("shop", { prods: products, pageTitle: "Shop" });
 });
 
 export default router;
