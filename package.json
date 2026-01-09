@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "cd 06-templating && bun --watch app.js"
+    "start": "cd 07-MVC && bun --watch app.js"
   },
   "author": "Ahmad Aamir",
   "license": "ISC",
