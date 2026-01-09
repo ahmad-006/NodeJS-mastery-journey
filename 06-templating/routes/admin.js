@@ -6,7 +6,10 @@ const router = express.Router();
 const products = [];
 //? add-product route
 router.get("/add-product", (req, res) => {
-  res.render("add-product", { pageTitle: "Add product" });
+  res.render("add-product", {
+    pageTitle: "Add product",
+    path: "/admin/add-product",
+  });
 });
 
 //? implementing /product route
