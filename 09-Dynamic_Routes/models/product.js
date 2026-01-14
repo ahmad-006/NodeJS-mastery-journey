@@ -28,6 +28,7 @@ export class Product {
   }
 
   save() {
+    this.id = Math.random().toString();
     getProductsFromFile((products) => {
       products.push(this);
 
@@ -41,5 +42,12 @@ export class Product {
   // RE-IMPLEMENTED CORRECTLY WITH CALLBACK
   static fetchAll(cb) {
     getProductsFromFile(cb);
+  }
+
+  static FindById(id, cb) {
+    getProductsFromFile((products) => {
+      const product = products.find((p) => p.id === id);
+      cb(product);
+    });
   }
 }
