@@ -4,6 +4,7 @@ import {
   getCheckout,
   getIndex,
   getOrders,
+  getProductId,
   getProducts,
 } from "../controllers/shop.js";
 
@@ -15,5 +16,7 @@ router.get("/cart", getCart);
 router.get("/checkout", getCheckout);
 router.get("/orders", getOrders);
 router.get("/products", getProducts);
+router.get("/products/:productId", getProductId);
+// router.get("/products/delete");
 
 export default router;

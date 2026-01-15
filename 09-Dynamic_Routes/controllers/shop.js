@@ -38,4 +38,11 @@ const getOrders = (req, res) => {
   });
 };
 
-export { getProducts, getIndex, getCart, getCheckout, getOrders };
+const getProductId = (req, res, next) => {
+  const { productId } = req.params;
+  Product.FindById(productId, (product) => {
+    console.log(product);
+  });
+  res.redirect("/");
+};
+export { getProducts, getIndex, getCart, getCheckout, getOrders, getProductId };
