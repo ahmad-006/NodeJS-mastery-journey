@@ -25,6 +25,11 @@ const getCart = (req, res) => {
     pageTitle: "Your Cart",
   });
 };
+const postCart = (req, res, next) => {
+  const { productId } = req.body;
+  console.log(productId);
+  res.redirect("/cart");
+};
 const getCheckout = (req, res) => {
   res.render("shop/checkout", {
     path: "/checkout",
@@ -41,8 +46,19 @@ const getOrders = (req, res) => {
 const getProductId = (req, res, next) => {
   const { productId } = req.params;
   Product.FindById(productId, (product) => {
-    console.log(product);
+    res.render("shop/product-detail", {
+      pageTitle: product.title,
+      product,
+      path: "/products",
+    });
   });
-  res.redirect("/");
 };
-export { getProducts, getIndex, getCart, getCheckout, getOrders, getProductId };
+export {
+  getProducts,
+  getIndex,
+  getCart,
+  getCheckout,
+  getOrders,
+  getProductId,
+  postCart,
+};

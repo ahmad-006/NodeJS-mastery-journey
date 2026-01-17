@@ -6,6 +6,7 @@ import {
   getOrders,
   getProductId,
   getProducts,
+  postCart,
 } from "../controllers/shop.js";
 
 const router = express.Router();
@@ -13,6 +14,7 @@ const router = express.Router();
 //? /  (default) route
 router.get("/", getIndex);
 router.get("/cart", getCart);
+router.post("/cart", postCart);
 router.get("/checkout", getCheckout);
 router.get("/orders", getOrders);
 router.get("/products", getProducts);
