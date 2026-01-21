@@ -79,6 +79,10 @@ export class Product {
   static delete(id) {
     getProductsFromFile((products) => {
       const updatedProducts = products.filter((prod) => prod.id !== id);
+      // writitng the product to the file
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (err) console.log(err);
+      });
     });
   }
 }
