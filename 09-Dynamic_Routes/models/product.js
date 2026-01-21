@@ -11,6 +11,7 @@ const getProductsFromFile = (cb) => {
       cb([]);
     } else {
       try {
+        // @ts-ignore
         cb(JSON.parse(fileContent));
       } catch (e) {
         cb([]);
@@ -20,22 +21,47 @@ const getProductsFromFile = (cb) => {
 };
 
 export class Product {
-  constructor(title, price, imageUrl, description) {
+  constructor(id, title, price, imageUrl, description) {
+    this.id = id;
     this.title = title;
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
   }
 
-  save() {
-    this.id = Math.random().toString();
+  save(cb) {
+    console.log(this);
     getProductsFromFile((products) => {
-      products.push(this);
+      if (!this.id) {
+        //generating random ID for the product
+        this.id = Math.random().toString();
 
-      // FIX: Used writeFile instead of write
-      fs.writeFile(p, JSON.stringify(products), (err) => {
-        if (err) console.log(err);
-      });
+        //pushing the product
+        products.push(this);
+
+        // writitng the products to the file
+        fs.writeFile(p, JSON.stringify(products), (err) => {
+          if (err) console.log(err);
+          cb();
+        });
+      } else {
+        // finding index of product with same ID
+        const existingProductIndex = products.findIndex(
+          (product) => product.id === this.id,
+        );
+
+        //making copy of products array for safety
+        const updatedProducts = [...products];
+
+        //updating the product with newly passed Information
+        updatedProducts[existingProductIndex] = this;
+
+        // writitng the product to the file
+        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+          if (err) console.log(err);
+          cb();
+        });
+      }
     });
   }
 
@@ -48,6 +74,11 @@ export class Product {
     getProductsFromFile((products) => {
       const product = products.find((p) => p.id === id);
       cb(product);
+    });
+  }
+  static delete(id) {
+    getProductsFromFile((products) => {
+      const updatedProducts = products.filter((prod) => prod.id !== id);
     });
   }
 }
