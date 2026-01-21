@@ -1,3 +1,4 @@
+import { Cart } from "../models/cart.js";
 import { Product } from "../models/product.js";
 
 const getIndex = (req, res) => {
@@ -27,7 +28,9 @@ const getCart = (req, res) => {
 };
 const postCart = (req, res, next) => {
   const { productId } = req.body;
-  console.log(productId);
+  Product.FindById(productId, (product) => {
+    Cart.addProduct(product.id, product.price);
+  });
   res.redirect("/cart");
 };
 const getCheckout = (req, res) => {
