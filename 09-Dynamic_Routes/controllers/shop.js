@@ -24,17 +24,19 @@ const getCart = (req, res) => {
   Cart.getCart((cart) => {
     const cartProducts = [];
     Product.fetchAll((products) => {
-      for (let product of products) {
-        const cartProduct = cart.products.find((p) => p.id === product.id);
-        if (cartProduct) {
-          cartProducts.push({ product, qty: cartProduct.qty });
+      if (cart) {
+        for (let product of products) {
+          const cartProduct = cart.products.find((p) => p.id === product.id);
+          if (cartProduct) {
+            cartProducts.push({ product, qty: cartProduct.qty });
+          }
         }
       }
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
         products: cartProducts,
-        totalPrice: cart.totalPrice,
+        totalPrice: cart ? cart.totalPrice : 0,
       });
     });
   });
