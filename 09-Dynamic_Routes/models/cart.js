@@ -18,7 +18,7 @@ export class Cart {
       );
       const existingProduct = cart.products[existingProductIndex];
       let updatedProduct;
-      
+
       // Add new product / increase quantity
       if (existingProduct) {
         updatedProduct = { ...existingProduct };
@@ -51,13 +51,22 @@ export class Cart {
         return;
       }
       const productQty = product.qty;
-      updatedCart.products = updatedCart.products.filter((prod) => prod.id !== id);
-      updatedCart.totalPrice =
-        updatedCart.totalPrice - price * productQty;
+      updatedCart.products = updatedCart.products.filter(
+        (prod) => prod.id !== id,
+      );
+      updatedCart.totalPrice = updatedCart.totalPrice - price * productQty;
 
       fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
         if (err) console.log(err);
       });
+    });
+  }
+
+  static getCart(cb) {
+    fs.readFile(p, (err, fileContent) => {
+      let cart;
+      if (!err) cart = JSON.parse(fileContent);
+      cb(cart);
     });
   }
 }
