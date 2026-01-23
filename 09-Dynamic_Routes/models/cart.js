@@ -64,8 +64,14 @@ export class Cart {
 
   static getCart(cb) {
     fs.readFile(p, (err, fileContent) => {
-      let cart;
-      if (!err) cart = JSON.parse(fileContent);
+      let cart = null;
+      if (!err) {
+        try {
+          cart = JSON.parse(fileContent);
+        } catch (e) {
+          console.log(e);
+        }
+      }
       cb(cart);
     });
   }
