@@ -11,9 +11,14 @@ const getAddProducts = (req, res) => {
 const postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
   const product = new Product(null, title, price, imageUrl, description);
-  product.save(() => {
-    res.redirect("/");
-  });
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const getProducts = (req, res, next) => {
@@ -30,7 +35,7 @@ const getEditProduct = (req, res) => {
   // Check if "edit" query parameter is set to true
   const isEditing = req.query.edit;
   const { productId } = req.params;
-  
+
   if (isEditing == "true") {
     // Fetch the product to pre-populate the form
     Product.FindById(productId, (product) => {
@@ -47,10 +52,10 @@ const getEditProduct = (req, res) => {
 const postEditProduct = (req, res, next) => {
   // Extract updated product info from request body
   const { productId, price, imageUrl, title, description } = req.body;
-  
+
   // Create a new Product instance with the existing ID
   const product = new Product(productId, title, price, imageUrl, description);
-  
+
   // Save changes (will trigger update logic in model)
   product.save(() => {
     res.redirect("/");
