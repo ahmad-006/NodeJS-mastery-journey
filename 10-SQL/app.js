@@ -9,6 +9,7 @@ import express from "express";
 import { router as adminRoutes } from "./routes/admin.js";
 import shopRoutes from "./routes/shop.js";
 import { pageNotFound } from "./controllers/404.js";
+import db from "./util/database.js";
 
 const app = express();
 
