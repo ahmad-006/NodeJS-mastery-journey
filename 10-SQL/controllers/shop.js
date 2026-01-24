@@ -2,23 +2,27 @@ import { Cart } from "../models/cart.js";
 import { Product } from "../models/product.js";
 
 const getIndex = (req, res) => {
-  Product.fetchAll((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
-  });
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render("shop/index", {
+        prods: rows,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err) => [console.log(err)]);
 };
 
 const getProducts = (req, res) => {
-  Product.fetchAll((products) => {
-    res.render("shop/products-list", {
-      prods: products,
-      pageTitle: "All Products",
-      path: "/products",
-    });
-  });
+  Product.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render("shop/products-list", {
+        prods: rows,
+        pageTitle: "All Products",
+        path: "/products",
+      });
+    })
+    .catch((err) => [console.log(err)]);
 };
 const getCart = (req, res) => {
   Cart.getCart((cart) => {
@@ -63,13 +67,15 @@ const getOrders = (req, res) => {
 
 const getProductId = (req, res, next) => {
   const { productId } = req.params;
-  Product.FindById(productId, (product) => {
-    res.render("shop/product-detail", {
-      pageTitle: product.title,
-      product,
-      path: "/products",
-    });
-  });
+  Product.FindById(productId)
+    .then(([product]) => {
+      res.render("shop/product-detail", {
+        pageTitle: product[0].title,
+        product: product[0],
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err.sqlMessage));
 };
 
 const postDeleteCartProduct = (req, res, next) => {
