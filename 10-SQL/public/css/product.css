@@ -25,3 +25,14 @@
 .product__description {
     text-align: center;
 }
+
+.product-detail__image {
+    width: 20rem;
+    max-width: 90%;
+    margin: auto;
+}
+
+.product-detail__image img {
+    width: 100%;
+    height: auto;
+}
