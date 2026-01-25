@@ -1,5 +1,4 @@
-//importing nodejs core modules
-import http from "http";
+// importing core modules
 import path from "path";
 
 // Importing express
@@ -9,28 +8,17 @@ import express from "express";
 import { router as adminRoutes } from "./routes/admin.js";
 import shopRoutes from "./routes/shop.js";
 import { pageNotFound } from "./controllers/404.js";
-import db from "./util/database.js";
+import { sequelize } from "./util/database.js";
 
 const app = express();
-
-//? {for pug}
-// // 1. Activating the engine so that it knows we are using pug for templatings
-// app.set("view engine", "pug");
-// // 2. Defining views location where it can find the .pug files
-// app.set("views", path.join(__dirname, "views"));
 
 //? {for EJS}
 // 1. Activating the engine so that it knows we are using ejs for templatings
 app.set("view engine", "ejs");
-// 2. Defining views location where it can find the .ejs files
 app.set("views", path.join(__dirname, "views"));
 
 //? middleware to parse the body from the request received
 app.use(express.urlencoded({ extended: false }));
-
-// EXPLAINS: By default, Express treats every URL as a route and hides your file system.
-// This middleware acts as a "tunnel" to the 'public' folder.
-// If a request matches a file inside 'public' (like /css/main.css), it serves it immediately.
 app.use(express.static(path.join(__dirname, "public")));
 
 //? middlewares for routes
@@ -38,28 +26,14 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(pageNotFound);
 
-// //? Adding a middleware
-// app.use((req, res, next) => {
-//   console.log("Hello from the middleware...!");
-
-//   //? next() allows request to move to next middleware
-//   next();
-// });
-
-// //? Adding another middleware
-// app.use((req, res, next) => {
-//   console.log("Hello from second middleware");
-//   res.send("<h1>Hello from the ExpressJS......</h1>");
-// });
-
-// //*         Semi - Vanilla Way
-// 'app' is just a function with the signature (req, res, next).
-// We can pass it to the raw Node HTTP server to handle all incoming requests.
-// const server = http.createServer(app);
-
-// //? Starts the server process and keeps the Event Loop running on port 3000.
-// server.listen(3000);
-
-// //*         Express Way
-//? using express's app function to listen to 3000 port
-app.listen(3000);
+//? connecting DB with the server
+sequelize
+  .sync()
+  .then((result) => {
+    console.log("DB connected sucs\cessfully");
+    //? using express's app function to listen to 3000 port if DB is connected successfully
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
