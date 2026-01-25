@@ -1,31 +1,27 @@
-import { Cart } from "./cart.js";
-import db from "../util/database.js";
+import { sequelize } from "../util/database.js";
+import { DataTypes } from "sequelize";
 
-export class Product {
-  constructor(id, title, price, imageUrl, description) {
-    this.id = id;
-    this.title = title;
-    this.price = price;
-    this.imageUrl = imageUrl;
-    this.description = description;
-  }
-
-  save() {
-    return db.execute(
-      "INSERT INTO products (title,price,imageUrl, description) VALUES (?,?,?,?)",
-      [this.title, this.price, this.imageUrl, this.description],
-    );
-  }
-
-  // RE-IMPLEMENTED CORRECTLY WITH CALLBACK
-  static fetchAll() {
-    //execduting databse querries
-    return db.execute("SELECT * FROM products");
-  }
-
-  static FindById(id) {
-    return db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
-  }
-
-  static delete(id) {}
-}
+export const Product = sequelize.define("product", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  price: {
+    type: DataTypes.DOUBLE,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
