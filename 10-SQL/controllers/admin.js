@@ -10,25 +10,29 @@ const getAddProducts = (req, res) => {
 
 const postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
-  const product = new Product(null, title, price, imageUrl, description);
-  product
-    .save()
-    .then(() => {
+  Product.create({
+    title,
+    price,
+    imageUrl,
+    description,
+  })
+    .then((result) => {
+      console.log("PRODUCT CREATED SUCCESSFULLY");
       res.redirect("/");
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.error(err));
 };
 
 const getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("admin/products", {
-      prods: products,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
-    });
-  });
+  Product.findAll()
+    .then((products) => {
+      res.render("admin/products", {
+        prods: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => console.error(err));
 };
 
 const getEditProduct = (req, res) => {
@@ -38,35 +42,50 @@ const getEditProduct = (req, res) => {
 
   if (isEditing == "true") {
     // Fetch the product to pre-populate the form
-    Product.FindById(productId, (product) => {
-      res.render("admin/edit-product", {
-        pageTitle: "Add product",
-        path: "/admin/edit-product",
-        product,
-        editing: isEditing == "true",
+    Product.findByPk(productId)
+      .then((product) => {
+        res.render("admin/edit-product", {
+          pageTitle: "Add product",
+          path: "/admin/edit-product",
+          product,
+          editing: isEditing == "true",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
       });
-    });
   }
 };
 
 const postEditProduct = (req, res, next) => {
-  // Extract updated product info from request body
   const { productId, price, imageUrl, title, description } = req.body;
-
-  // Create a new Product instance with the existing ID
-  const product = new Product(productId, title, price, imageUrl, description);
-
-  // Save changes (will trigger update logic in model)
-  product.save(() => {
-    res.redirect("/");
-  });
+  Product.update(
+    { title, price, imageUrl, description },
+    {
+      where: {
+        id: productId,
+      },
+    },
+  )
+    .then((result) => {
+      console.log("UPDATED PRODUCT!");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
 
 const postDeleteProduct = (req, res, next) => {
   const { id } = req.params;
-  // Delete the product by ID
-  Product.delete(id);
-  res.redirect("/admin/products");
+  Product.destroy({
+    where: {
+      id,
+    },
+  })
+    .then((result) => {
+      console.log("DESTROYED PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
 export {
   postAddProduct,
