@@ -2,27 +2,27 @@ import { Cart } from "../models/cart.js";
 import { Product } from "../models/product.js";
 
 const getIndex = (req, res) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/index", {
-        prods: rows,
+        prods: products,
         pageTitle: "Shop",
         path: "/",
       });
     })
-    .catch((err) => [console.log(err)]);
+    .catch((err) => console.error(err));
 };
 
 const getProducts = (req, res) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/products-list", {
-        prods: rows,
+        prods: products,
         pageTitle: "All Products",
         path: "/products",
       });
     })
-    .catch((err) => [console.log(err)]);
+    .catch((err) => console.error(err));
 };
 const getCart = (req, res) => {
   Cart.getCart((cart) => {
@@ -67,11 +67,11 @@ const getOrders = (req, res) => {
 
 const getProductId = (req, res, next) => {
   const { productId } = req.params;
-  Product.FindById(productId)
-    .then(([product]) => {
+  Product.findByPk(productId)
+    .then((product) => {
       res.render("shop/product-detail", {
-        pageTitle: product[0].title,
-        product: product[0],
+        pageTitle: product.title,
+        product: product,
         path: "/products",
       });
     })
