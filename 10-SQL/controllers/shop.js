@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { Cart } from "../models/cart.js";
 import { Product } from "../models/product.js";
 
 const getIndex = (req, res) => {
@@ -94,10 +93,43 @@ const getCheckout = (req, res) => {
   });
 };
 const getOrders = (req, res) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "Your Orders",
-  });
+  req.user
+    .getOrders({ include: ["products"] })
+    .then((orders) => {
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders,
+      });
+    })
+    .catch((err) => console.error(err));
+};
+const postOrders = (req, res, next) => {
+  let fetchedProducts;
+  let fetchedCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
+    .then((products) => {
+      fetchedProducts = products;
+      return req.user.createOrder();
+    })
+    .then((order) => {
+      order.addProduct(
+        fetchedProducts.map((prod) => {
+          prod.orderItem = { quantity: prod.cartItem.quantity };
+          return prod;
+        }),
+      );
+    })
+    .then(() => {
+      return fetchedCart.setProducts(null);
+    })
+    .then(() => res.redirect("/orders"))
+    .catch((err) => console.error(err));
 };
 
 const getProductId = (req, res, next) => {
@@ -145,4 +177,5 @@ export {
   getProductId,
   postCart,
   postDeleteCartProduct,
+  postOrders,
 };
