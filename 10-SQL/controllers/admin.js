@@ -10,12 +10,13 @@ const getAddProducts = (req, res) => {
 
 const postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
-  Product.create({
-    title,
-    price,
-    imageUrl,
-    description,
-  })
+  req.user
+    .createProduct({
+      title,
+      price,
+      imageUrl,
+      description,
+    })
     .then((result) => {
       console.log("PRODUCT CREATED SUCCESSFULLY");
       res.redirect("/");
