@@ -28,6 +28,9 @@
                 <div class="centered">
                     <hr>
                     <h3>Total Price: $<%= totalPrice %></h3>
+                    <form action="/create-order" method="POST">
+                        <button class="btn" type="submit">Order Now!</button>
+                    </form>
                 </div>
             </div>
         <% } else { %>
