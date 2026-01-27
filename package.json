@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "cd 10-SQL && bun --watch app.js"
+    "start": "cd 11-MongoDB && bun --watch app.js"
   },
   "author": "Ahmad Aamir",
   "license": "ISC",
