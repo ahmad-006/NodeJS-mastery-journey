@@ -72,12 +72,22 @@ const getCheckout = (req, res) => {
   });
 };
 const getOrders = (req, res) => {
-    // Pending implementation
-    res.redirect('/');
+  req.user
+    .getOrder()
+    .then((orders) => {
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders,
+      });
+    })
+    .catch((err) => console.error(err));
 };
 const postOrders = (req, res, next) => {
-    // Pending implementation
-    res.redirect('/');
+  req.user
+    .addOrder()
+    .then(() => res.redirect("/orders"))
+    .catch((err) => console.error(err));
 };
 
 export {

@@ -96,6 +96,36 @@ export class User {
     }
   }
 
+  async addOrder() {
+    const db = getDb();
+    const products = await this.getCart();
+    const order = {
+      items: products,
+      user: {
+        _id: this._id,
+        name: this.name,
+      },
+    };
+    const cart = await db.collection("orders").insertOne(order);
+    this.cart = { items: [] };
+    await db
+      .collection("users")
+      .findOneAndUpdate(
+        { _id: new ObjectId(this._id) },
+        { $set: { cart: { items: [] } } },
+        { returnDocument: "after" },
+      );
+    return cart;
+  }
+
+  async getOrder() {
+    const db = getDb();
+    return await db
+      .collection("orders")
+      .find({ "user._id": this._id })
+      .toArray();
+  }
+
   static findById(id) {
     const db = getDb();
 
