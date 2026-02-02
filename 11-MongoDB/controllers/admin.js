@@ -10,30 +10,27 @@ const getAddProducts = (req, res) => {
 
 const postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
-  req.user
-    .createProduct({
-      title,
-      price,
-      imageUrl,
-      description,
-    })
-    .then((result) => {
-      console.log("PRODUCT CREATED SUCCESSFULLY");
-      res.redirect("/");
-    })
-    .catch((err) => console.error(err));
+  console.log("-------", req.user);
+  const product = new Product(
+    title,
+    price,
+    imageUrl,
+    description,
+    null,
+    req.user._id,
+  );
+  product.save();
+  res.redirect("/");
 };
 
 const getProducts = (req, res, next) => {
-  Product.findAll()
-    .then((products) => {
-      res.render("admin/products", {
-        prods: products,
-        pageTitle: "Admin Products",
-        path: "/admin/products",
-      });
-    })
-    .catch((err) => console.error(err));
+  Product.fetchAll().then((products) => {
+    res.render("admin/products", {
+      prods: products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
+    });
+  });
 };
 
 const getEditProduct = (req, res) => {
@@ -43,10 +40,10 @@ const getEditProduct = (req, res) => {
 
   if (isEditing == "true") {
     // Fetch the product to pre-populate the form
-    Product.findByPk(productId)
+    Product.findById(productId)
       .then((product) => {
         res.render("admin/edit-product", {
-          pageTitle: "Add product",
+          pageTitle: "Edit product",
           path: "/admin/edit-product",
           product,
           editing: isEditing == "true",
@@ -60,33 +57,16 @@ const getEditProduct = (req, res) => {
 
 const postEditProduct = (req, res, next) => {
   const { productId, price, imageUrl, title, description } = req.body;
-  Product.update(
-    { title, price, imageUrl, description },
-    {
-      where: {
-        id: productId,
-      },
-    },
-  )
-    .then((result) => {
-      console.log("UPDATED PRODUCT!");
-      res.redirect("/admin/products");
-    })
-    .catch((err) => console.log(err));
+  const updatedProduct = { title, price, imageUrl, description };
+  Product.updateById(productId, { title, price, imageUrl, description });
+  res.redirect("/admin/products");
 };
 
 const postDeleteProduct = (req, res, next) => {
   const { id } = req.params;
-  Product.destroy({
-    where: {
-      id,
-    },
-  })
-    .then((result) => {
-      console.log("DESTROYED PRODUCT");
-      res.redirect("/admin/products");
-    })
-    .catch((err) => console.log(err));
+  Product.deleteById(id).then(() => {
+    res.redirect("/admin/products");
+  });
 };
 export {
   postAddProduct,
