@@ -22,6 +22,80 @@ export class User {
       });
   }
 
+  addToCart(product) {
+    const db = getDb();
+    let newQuanitiy = 1;
+
+    const cartProductIndex = this.cart.items.findIndex((cp) => {
+      return cp.productId.toString() === product._id.toString();
+    });
+
+    if (cartProductIndex >= 0) {
+      const updatedProduct = this.cart.items[cartProductIndex];
+      const oldQuantity = updatedProduct.quantity;
+      newQuanitiy += oldQuantity;
+      this.cart.items[cartProductIndex] = {
+        productId: updatedProduct._id,
+        quantity: newQuanitiy,
+      };
+    } else {
+      this.cart = {
+        items: [
+          ...this.cart.items,
+          { productId: product._id, quantity: newQuanitiy },
+        ],
+      };
+    }
+
+    return db
+      .collection("users")
+      .updateOne({ _id: this._id }, { $set: { cart: this.cart } });
+  }
+
+  async getCart() {
+    const db = getDb();
+    const cartItemIds = this.cart.items.map((i) => i.productId);
+
+    const response = await db
+      .collection("products")
+      .find({ _id: { $in: cartItemIds } })
+      .toArray();
+
+    const products = response.map((p) => {
+      return {
+        ...p,
+        quantity: this.cart.items.find(
+          (i) => i.productId.toString() === p._id.toString(),
+        ).quantity,
+      };
+    });
+
+    return products;
+  }
+
+  async deleteCartbyId(productId) {
+    try {
+      const db = getDb();
+
+      const updatedCartProducts = this.cart.items.filter(
+        (p) => productId.toString() !== p.productId.toString(),
+      );
+
+      console.log(updatedCartProducts);
+      const response = await db
+        .collection("users")
+        .findOneAndUpdate(
+          { _id: this._id },
+          { $set: { cart: { items: [...updatedCartProducts] } } },
+          { returnDocument: "after" },
+        );
+
+      return response.cart;
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   static findById(id) {
     const db = getDb();
 

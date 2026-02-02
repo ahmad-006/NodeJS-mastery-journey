@@ -34,17 +34,36 @@ const getProductId = (req, res, next) => {
 };
 
 const getCart = (req, res) => {
-    // Pending implementation
-    res.redirect('/');
+  req.user
+    .getCart()
+    .then((products) => {
+      let totalPrice = 0;
+      products.forEach((p) => {
+        totalPrice += p.price * p.quantity;
+      });
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: products,
+        totalPrice: totalPrice,
+      });
+    })
+    .catch((err) => console.error(err));
 };
 const postCart = (req, res, next) => {
-    // Pending implementation
-    res.redirect('/');
+  const { productId: id } = req.body;
+
+  Product.findById(id)
+    .then((product) => {
+      return req.user.addToCart(product);
+    })
+    .then((result) => res.redirect("/cart"));
 };
 
 const postDeleteCartProduct = async (req, res, next) => {
-    // Pending implementation
-    res.redirect('/');
+  const { productId: id } = req.body;
+  await req.user.deleteCartbyId(id);
+  res.redirect("/cart");
 };
 const getCheckout = (req, res) => {
   res.render("shop/checkout", {
