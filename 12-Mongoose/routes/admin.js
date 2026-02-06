@@ -9,7 +9,6 @@ import {
 } from "../controllers/admin.js";
 const router = express.Router();
 
-const products = [];
 router.get("/add-product", getAddProducts);
 router.get("/products", getProducts);
 router.post("/add-product", postAddProduct);
