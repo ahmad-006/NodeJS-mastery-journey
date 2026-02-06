@@ -9,6 +9,8 @@ import express from "express";
 import { router as adminRoutes } from "./routes/admin.js";
 import shopRoutes from "./routes/shop.js";
 import { pageNotFound } from "./controllers/404.js";
+import { connectMongoose } from "./util/database.js";
+import { User } from "./models/user.js";
 
 const app = express();
 
@@ -22,10 +24,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 //? middlewares for routes
-// User middleware removed for Mongoose migration
+app.use(async (req, res, next) => {
+  const user = await User.findById("6980c48cf45b79db1d3a3033");
+
+  req.user = user;
+  next();
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(pageNotFound);
 
-app.listen(3000);
+try {
+  connectMongoose().then(() => {
+    app.listen(3000);
+    console.log("app running");
+  });
+} catch (error) {
+  console.error("ERROR:", error.message);
+}
