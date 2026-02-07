@@ -5,9 +5,7 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 export const mongoConnect = (cb) => {
-  MongoClient.connect(
-    "mongodb+srv://mrsheikho-06:RK5SOUbYuNnsPIM7@cluster0.cv16iwb.mongodb.net/shop?appName=Cluster0",
-  )
+  MongoClient.connect(process.env.MONGODB_URI)
     .then((client) => {
       _db = client.db("shop");
       cb(client);
