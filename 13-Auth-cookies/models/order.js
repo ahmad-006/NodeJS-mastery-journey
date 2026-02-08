@@ -1,5 +1,6 @@
 import mongoose, { Schema, Types } from "mongoose";
 
+// Order schema tracks the purchased products and the user who made the purchase
 const orderSchema = new Schema({
   products: [
     {
