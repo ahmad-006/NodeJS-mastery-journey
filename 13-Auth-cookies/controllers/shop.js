@@ -54,6 +54,7 @@ const getCart = (req, res, next) => {
     .catch((err) => console.error(err));
 };
 
+
 const postCart = async (req, res, next) => {
   const { productId: id } = req.body;
   try {
