@@ -14,6 +14,10 @@ This repository is organized into modules, each focusing on specific concepts an
 | **07-MVC** | Implementing the **Model-View-Controller (MVC)** architecture for better code organization. |
 | **08-Enhancing** | Enhancing the app with better routing, controllers, and data management. |
 | **09-Dynamic_Routes** | Implementing dynamic routes, passing parameters, and advanced product details features. |
+| **10-SQL** | Integrating **MySQL** using **Sequelize** for relational data management. |
+| **11-MongoDB** | Transitioning to **NoSQL** with the official MongoDB driver. |
+| **12-Mongoose** | Using **Mongoose** for object data modeling and schema-based solutions. |
+| **13-Auth-cookies** | Implementing Authentication and Session management with cookies. |
 
 ## 🛠️ Technologies Used
 
