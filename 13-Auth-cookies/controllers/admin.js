@@ -18,20 +18,25 @@ const postAddProduct = async (req, res) => {
 };
 
 const getEditProduct = async (req, res) => {
-  // Check if "edit" query parameter is set to true
   const isEditing = req.query.edit;
+  if (!isEditing) {
+    return res.redirect("/");
+  }
   const { productId } = req.params;
-
-  if (isEditing == "true") {
-    // Fetch the product to pre-populate the form
-    const product = Product.findById(productId);
-
+  try {
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.redirect("/");
+    }
     res.render("admin/edit-product", {
       pageTitle: "Edit product",
       path: "/admin/edit-product",
       product,
-      editing: isEditing == "true",
+      editing: isEditing,
     });
+  } catch (error) {
+    console.log(error);
+    res.redirect("/");
   }
 };
 
