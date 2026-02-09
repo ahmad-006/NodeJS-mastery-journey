@@ -2,19 +2,26 @@
 // importing core modules
 import path from "path";
 
-// Importing express
+// Importing packages
 import express from "express";
+import { connectMongoose } from "./util/database.js";
+import { User } from "./models/user.js";
+import session from "express-session";
+import MongoDBSession from "connect-mongodb-session";
 
 // Importing Routes
 import { router as adminRoutes } from "./routes/admin.js";
 import shopRoutes from "./routes/shop.js";
 import authRoutes from "./routes/auth.js";
 import { pageNotFound } from "./controllers/404.js";
-import { connectMongoose } from "./util/database.js";
-import { User } from "./models/user.js";
 
 const app = express();
 const __dirname = path.dirname(process.argv[1]);
+const MongoDBStore = MongoDBSession(session);
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI,
+  collection: "sessions",
+});
 
 //? {for EJS}
 // 1. Activating the engine so that it knows we are using ejs for templatings
@@ -24,12 +31,31 @@ app.set("views", path.join(__dirname, "views"));
 //? middleware to parse the body from the request received
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store,
+  }),
+);
 
 //? middlewares for routes
 app.use(async (req, res, next) => {
-  const user = await User.findById("6980c48cf45b79db1d3a3033");
+  if (!req.session.user) {
+    return next();
+  }
+  try {
+    const user = await User.findById(req.session.user._id);
+    req.user = user;
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-  req.user = user;
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
   next();
 });
 
