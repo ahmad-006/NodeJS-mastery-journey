@@ -8,6 +8,7 @@ import { connectMongoose } from "./util/database.js";
 import { User } from "./models/user.js";
 import session from "express-session";
 import MongoDBSession from "connect-mongodb-session";
+import flash from "connect-flash";
 
 // Importing Routes
 import { router as adminRoutes } from "./routes/admin.js";
@@ -39,6 +40,7 @@ app.use(
     store,
   }),
 );
+app.use(flash());
 
 //? middlewares for routes
 app.use(async (req, res, next) => {
