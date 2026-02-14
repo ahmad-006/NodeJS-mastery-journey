@@ -1,39 +1,52 @@
-const User = require('../models/user');
+import { User } from "../models/user.js";
+import bcrypt from "bcryptjs";
 
-exports.getLogin = (req, res, next) => {
-  res.render('auth/login', {
-    path: '/login',
-    pageTitle: 'Login',
-    isAuthenticated: false
+export const getLogin = (req, res, next) => {
+  res.render("auth/login", {
+    path: "/login",
+    pageTitle: "Login",
+    isAuthenticated: false,
   });
 };
 
-exports.getSignup = (req, res, next) => {
-  res.render('auth/signup', {
-    path: '/signup',
-    pageTitle: 'Signup',
-    isAuthenticated: false
+export const getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Signup",
+    isAuthenticated: false,
   });
 };
 
-exports.postLogin = (req, res, next) => {
-  User.findById('5bab316ce0a7c75f783cb8a8')
-    .then(user => {
-      req.session.isLoggedIn = true;
-      req.session.user = user;
-      req.session.save(err => {
-        console.log(err);
-        res.redirect('/');
-      });
-    })
-    .catch(err => console.log(err));
+export const postLogin = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.redirect("/login");
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) return res.redirect("/login");
+    req.session.isLoggedIn = true;
+    req.session.user = user;
+    req.session.save((err) => {
+      console.log(err);
+      res.redirect("/");
+    });
+  } catch (error) {}
 };
 
-exports.postSignup = (req, res, next) => {};
+export const postSignup = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const user = await User.findOne({ email });
+  if (!!user) return res.redirect("/singup");
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const newUser = new User({ email, password: hashedPassword });
+  await newUser.save();
+  res.redirect("/login");
+};
 
-exports.postLogout = (req, res, next) => {
-  req.session.destroy(err => {
+export const postLogout = (req, res, next) => {
+  req.session.destroy((err) => {
     console.log(err);
-    res.redirect('/');
+    res.redirect("/");
   });
 };
