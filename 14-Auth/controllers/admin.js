@@ -44,7 +44,7 @@ export const getEditProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findById(prodId)
     .then((product) => {
-      if (!product) {
+      if (!product || product.userId.toString() !== req.user._id.toString()) {
         return res.redirect("/");
       }
       res.render("admin/edit-product", {
@@ -68,6 +68,9 @@ export const postEditProduct = (req, res, next) => {
 
   Product.findById(prodId)
     .then((product) => {
+      if (!product || product.userId.toString() !== req.user._id.toString()) {
+        return res.redirect("/");
+      }
       product.title = updatedTitle;
       product.price = updatedPrice;
       product.description = updatedDesc;
