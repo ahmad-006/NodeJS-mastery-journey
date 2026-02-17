@@ -86,7 +86,7 @@ export const postEditProduct = (req, res, next) => {
 
 export const getProducts = (req, res, next) => {
   if (!req.session.user) return res.redirect("/login");
-  Product.find()
+  Product.find({ userId: req.user._id })
     // .select('title price -_id')
     // .populate('userId', 'name')
     .then((products) => {
